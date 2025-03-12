@@ -301,7 +301,7 @@ async function startBot() {
     // API untuk mengirim kode verifikasi ke WhatsApp
     app.post("/adminnya", async (req, res) => {
         const { jenis, username, userid, nomorhp, namabarang, acak, description, imagee, date } = req.body;
-        const caption = `PERSETUJUAN
+        const caption = `PERSETUJUAN ADMIN
 Dari :
 ${username}
 ${nomorhp}
