@@ -301,6 +301,10 @@ async function startBot() {
     // API untuk mengirim kode verifikasi ke WhatsApp
     app.post("/adminnya", async (req, res) => {
         const { jenis, username, userid, nomorhp, itemid, namabarang, acak, description, imagee, date } = req.body;
+        const buttons = [
+            {buttonId: `setuju 1 ${jenis} ${userid} ${itemid}`, buttonText: { displayText: `setuju 1 ${jenis} ${userid} ${itemid}` }},
+            { buttonId: `tolak 0 ${jenis} ${userid} ${itemid}`, buttonText: { displayText: `tolak 0 ${jenis} ${userid} ${itemid}` }}
+        ]
         const caption = `PERSETUJUAN ADMIN
 
 Dari :
@@ -318,16 +322,7 @@ ${description}
                 image: { url: `https://rkyproject.my.id/public/img/${imagee}` },
                 caption: caption,
                 footer: "testeraja",
-                buttons: [
-                    {
-                        buttonId: `setuju 1 ${jenis} ${userid} ${itemid}`,
-                        buttonText: { displayText: `setuju 1 ${jenis} ${userid} ${itemid}` },
-                    },
-                    {
-                        buttonId: `tolak 0 ${jenis} ${userid} ${itemid}`,
-                        buttonText: { displayText: `tolak 0 ${jenis} ${userid} ${itemid}` },
-                    },
-                ],
+                buttons: buttons,
                 viewOnce: true,
                 headerType: 4,
             });
