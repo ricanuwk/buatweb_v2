@@ -177,7 +177,6 @@ module.exports = sock = async (sock, m, msg, chatUpdate, store) => {
 				break
 			}
 			case 'persetujuan': {
-				if (!isCreator || !isPremium) reply(`Khusus Admin`)
 					reply(mess.wait)
 				let response = await fetch("https://rkyproject.my.id/persetujuanadmin", {
 					"method": "POST",
