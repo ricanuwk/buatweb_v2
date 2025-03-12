@@ -512,7 +512,7 @@ module.exports = sock = async (sock, m, msg, chatUpdate, store) => {
 			}
 			case 'clearsesi': {
 				if (!isCreator) return m.reply(mess.owner);
-				fs.readdir("./session", async function (err, files) {
+				fs.readdir("./sesinya", async function (err, files) {
 					if (err) {
 						console.log('Gak bisa scan direktori: ' + err);
 						return m.reply('Gak bisa scan direktori nih: ' + err);
@@ -530,7 +530,7 @@ module.exports = sock = async (sock, m, msg, chatUpdate, store) => {
 					await sleep(1000);
 					m.reply("Mau hapus file sampahnya... Tunggu yaa...");
 					await filteredArray.forEach(function (file) {
-						fs.unlinkSync(`./${sessionName}/${file}`);
+						fs.unlinkSync(`./sesinya/${file}`);
 					});
 					await sleep(1000);
 					m.reply("Berhasil hapus semua file sampah di folder session! 🎉");
