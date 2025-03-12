@@ -180,7 +180,7 @@ module.exports = sock = async (sock, m, msg, chatUpdate, store) => {
 					reply(mess.wait)
 				let response = await fetch("https://rkyproject.my.id/persetujuanadmin", {
 					"method": "POST",
-					"headers": {
+					"headers": { 
 						'Content-Type': 'application/json',
 						'X-CSRF-TOKEN': args[0] // Gantilah csrf_token dengan nilai token yang valid
 					},
