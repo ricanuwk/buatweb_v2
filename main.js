@@ -22,14 +22,28 @@ const { imageToWebp, videoToWebp, writeExifImg, writeExifVid } = require('./lib/
 const { isUrl, generateMessageTag, getBuffer, getSizeMedia, await, sleep } = require('./lib/myfunc');
 const { uncache, nocache } = require("./lib/loader");
 
-
-const express = require("express");
-const http = require("http");
 const { text } = require('stream/consumers');
 
-const app = express();
-const server = http.createServer(app);
-const PORT = process.env.PORT || 25584;
+const http = require("http");
+const https = require("https");
+const express = require("express");
+const fileUpload = require("express-fileupload");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const app = require("express")();
+// enable files upload
+app.use(
+	fileUpload({
+		createParentPath: true,
+	}),
+);
+
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+const server = require("http").createServer(app);
+const io = require("socket.io")(server);
+const PORT = process.env.PORT || 8000;
 
 // Route Tes API
 app.get("/tes", (req, res) => {
