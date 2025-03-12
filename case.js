@@ -79,7 +79,7 @@ module.exports = sock = async (sock, m, msg, chatUpdate, store) => {
 		const getQuoted = (m.quoted || m);
 		const quoted = (getQuoted.type == 'buttonsMessage') ? getQuoted[Object.keys(getQuoted)[1]] : (getQuoted.type == 'templateMessage') ? getQuoted.hydratedTemplate[Object.keys(getQuoted.hydratedTemplate)[1]] : (getQuoted.type == 'product') ? getQuoted[Object.keys(getQuoted)[0]] : m.quoted ? m.quoted : m
 		const mime = (quoted.msg || quoted).mimetype || '';
-		
+
 		const isMedia = /image|video|sticker|audio/.test(mime);
 		const isImage = (type == 'imageMessage');
 		const isVideo = (type == 'videoMessage');
@@ -172,6 +172,35 @@ module.exports = sock = async (sock, m, msg, chatUpdate, store) => {
 
 		if (!isCmd) return
 		switch (command.toLowerCase()) {
+			case 'testek':{
+				sock.sendMessage(m.chat, {text:`1 ${args[0]}, 2 ${args[1]}, 3 ${args[2]}, 4 ${args[3]}`})
+				break
+			}
+			case 'persetujuan': {
+				if (!isCreator || !isPremium) reply(`Khusus Admin`)
+					reply(mess.wait)
+				let response = await fetch("https://rkyproject.my.id/persetujuanadmin", {
+					"method": "POST",
+					"headers": {
+						'Content-Type': 'application/json'
+					},
+					"body": JSON.stringify({
+						"izin": args[0],
+						"jenis": args[1],
+						"user": args[2],
+						"item": args[3]
+					})
+				});
+
+				let responseData = await response.json();
+
+				if (responseData.status === 'error') {
+					return m.reply(JSON.stringify(responseData.message, null, 2)); // Display error message if any
+				}
+
+				sock.sendMessage(m.chat, { text: `Success: ${responseData.message}` }, { quoted: m });
+				break;
+			}
 
 			case 'del': {
 				if (!m.quoted) return reply('Kak, kamu perlu mengirim pesan yang mau dihapus ya! 🤔')
@@ -185,7 +214,7 @@ module.exports = sock = async (sock, m, msg, chatUpdate, store) => {
 				break
 			}
 			case 'menu': {
-				await sock.sendMessage(m.chat, { delete: { remoteJid: m.chat, id: m.id, participant: m.sender } })
+				// await sock.sendMessage(m.chat, { delete: { remoteJid: m.chat, id: m.id, participant: m.sender } })
 				sock.sendMessage(m.chat, { text: listCase() })
 				break
 			}

@@ -25,6 +25,7 @@ const { uncache, nocache } = require("./lib/loader");
 
 const express = require("express");
 const http = require("http");
+const { text } = require('stream/consumers');
 
 const app = express();
 const server = http.createServer(app);
@@ -302,8 +303,8 @@ async function startBot() {
     app.post("/adminnya", async (req, res) => {
         const { jenis, username, userid, nomorhp, itemid, namabarang, acak, description, imagee, date } = req.body;
         const buttons = [
-            {buttonId: `setuju 1 ${jenis} ${userid} ${itemid}`, buttonText: { displayText: `setuju 1 ${jenis} ${userid} ${itemid}` }},
-            { buttonId: `tolak 0 ${jenis} ${userid} ${itemid}`, buttonText: { displayText: `tolak 0 ${jenis} ${userid} ${itemid}` }}
+            { buttonId: `persetujuan 1 ${jenis} ${userid} ${itemid}`, buttonText: { displayText: `setuju` } },
+            { buttonId: `persetujuan 0 ${jenis} ${userid} ${itemid}`, buttonText: { displayText: `tolak` } }
         ]
         const caption = `PERSETUJUAN ADMIN
 
@@ -318,14 +319,27 @@ Desc :
 ${description}
 `;
         try {
-            await sock.sendMessage(`6281248249833@s.whatsapp.net`, {
-                image: { url: `https://rkyproject.my.id/public/img/${imagee}` },
-                caption: caption,
-                footer: "testeraja",
-                buttons: buttons,
-                viewOnce: true,
-                headerType: 4,
-            });
+            if (imagee) {
+                await sock.sendMessage(`6281248249833@s.whatsapp.net`, {
+                    image: { url: `https://rkyproject.my.id/public/img/${imagee}` },
+                    caption: caption,
+                    footer: footer,
+                    buttons: buttons,
+                    viewOnce: true,
+                    headerType: 4,
+                });
+            } else {
+                
+                await sock.sendMessage(`6281248249833@s.whatsapp.net`, {
+                    // image: { url: `https://rkyproject.my.id/public/img/${imagee}` },
+                    // caption: caption,
+                    text: caption,
+                    footer: footer,
+                    buttons: buttons,
+                    viewOnce: true,
+                    headerType: 4,
+                });
+            }
             await sock.sendMessage(`${nomorhp}@s.whatsapp.net`, {
                 text: `Mohon tunggu sebentar, Menunggu persetujuan admin`,
             });
