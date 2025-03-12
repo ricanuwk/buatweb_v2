@@ -300,7 +300,7 @@ async function startBot() {
     // API untuk mengirim kode verifikasi ke WhatsApp
     // API untuk mengirim kode verifikasi ke WhatsApp
     app.post("/adminnya", async (req, res) => {
-        const { jenis, username, userid, nomorhp, namabarang, acak, description, imagee, date } = req.body;
+        const { jenis, username, userid, nomorhp, itemid, namabarang, acak, description, imagee, date } = req.body;
         const caption = `PERSETUJUAN ADMIN
 
 Dari :
@@ -320,12 +320,12 @@ ${description}
                 footer: "testeraja",
                 buttons: [
                     {
-                        buttonId: `setuju 1 ${jenis} ${userid} ${acak}`,
-                        buttonText: { displayText: `setuju 1 ${jenis} ${userid} ${acak}` },
+                        buttonId: `setuju 1 ${jenis} ${userid} ${itemid}`,
+                        buttonText: { displayText: `setuju 1 ${jenis} ${userid} ${itemid}` },
                     },
                     {
-                        buttonId: `tolak 0 ${jenis} ${userid} ${date}`,
-                        buttonText: { displayText: `tolak 0 ${jenis} ${userid} ${acak}` },
+                        buttonId: `tolak 0 ${jenis} ${userid} ${itemid}`,
+                        buttonText: { displayText: `tolak 0 ${jenis} ${userid} ${itemid}` },
                     },
                 ],
                 viewOnce: true,
