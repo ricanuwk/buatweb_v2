@@ -54,64 +54,14 @@ const store = makeInMemoryStore({
 });
 
 global.opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse());
-global.db = new Low(new JSONFile("src/" + tempatDB));
-global.DATABASE = global.db;
-
-global.loadDatabase = async function loadDatabase() {
-    if (global.db.READ) {
-        return new Promise(resolve => {
-            const interval = setInterval(() => {
-                if (!global.db.READ) {
-                    clearInterval(interval);
-                    resolve(global.db.data == null ? global.loadDatabase() : global.db.data);
-                }
-            }, 1000);
-        });
-    }
-    if (global.db.data !== null) {
-        return;
-    }
-    global.db.READ = true;
-    try {
-        await global.db.read();
-        global.db.data = {
-            'users': {},
-            'database': {},
-            'chats': {},
-            'game': {},
-            'settings': {},
-            'message': {},
-            ...(global.db.data || {})
-        };
-        global.db.chain = _.chain(global.db.data);
-    } catch (error) {
-        console.error("⚠️ Gagal membaca database:", error);
-    } finally {
-        global.db.READ = false;
-    }
-};
-
-loadDatabase();
-
-if (global.db) {
-    setInterval(async () => {
-        if (global.db.data && !global.db.READ) {
-            try {
-                await global.db.write();
-            } catch (error) {
-                console.error("⚠️ Gagal menyimpan database:", error);
-            }
-        }
-    }, 30000);
-}
 
 require('./case.js');
 nocache("../case.js", module => console.log(colors.green("[ CHANGE ]") + " " + colors.green(module), "Updated"));
 require("./main.js");
 nocache("../main.js", module => console.log(colors.green("[ CHANGE ]") + " " + colors.green(module), "Updated"));
 
-const contacts = JSON.parse(fs.readFileSync("./src/data/role/contacts.json"));
-const sessionPath = './' + sessionName;
+const contacts = ownerNumber;
+const sessionPath = './sesinya';
 
 const askQuestion = questionText => {
     const interface = readline.createInterface({
