@@ -302,6 +302,7 @@ async function startBot() {
     app.post("/adminnya", async (req, res) => {
         const { jenis, username, userid, nomorhp, namabarang, acak, description, imagee, date } = req.body;
         const caption = `PERSETUJUAN ADMIN
+
 Dari :
 ${username}
 ${nomorhp}
