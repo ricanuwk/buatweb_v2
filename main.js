@@ -104,7 +104,7 @@ async function startBot() {
 
     const sock = createWASocket({
         'printQRInTerminal': false,
-        'syncFullHistory': true,
+        'syncFullHistory': false,
         'markOnlineOnConnect': true,
         'connectTimeoutMs': 60000,
         'defaultQueryTimeoutMs': 0,
