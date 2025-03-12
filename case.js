@@ -112,7 +112,8 @@ module.exports = sock = async (sock, m, msg, chatUpdate, store) => {
 		const senderbot = m.key.fromMe ? sock.user.id.split(':')[0] + "@s.whatsapp.net" || sock.user.id : m.key.participant || m.key.remoteJid;
 		const senderId = senderbot.split('@')[0];
 		const isBot = clientId.includes(senderId);
-		const isCreator = [botNumber, ...global.ownerNumber].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
+		const isCreator = [botNumber, global.ownerNumber].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
+		const isPremium = [botNumber, global.premium].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
 
 		let usernomor = await PhoneNumber('+' + m.sender.replace('@s.whatsapp.net', '')).getNumber('international');
 		let ownnomor = await PhoneNumber('+' + ownerNumber.replace('@s.whatsapp.net', '')).getNumber('international');
@@ -151,7 +152,7 @@ module.exports = sock = async (sock, m, msg, chatUpdate, store) => {
 		};
 
 		if (!sock.public) {
-			if (!isCreator && !m.key.fromMe) return;
+			if (!isCreator && !isPremium && !m.key.fromMe) return;
 		};
 
 
@@ -172,8 +173,6 @@ module.exports = sock = async (sock, m, msg, chatUpdate, store) => {
 		if (!isCmd) return
 		switch (command.toLowerCase()) {
 
-			case 'delete':
-			case 'd':
 			case 'del': {
 				if (!m.quoted) return reply('Kak, kamu perlu mengirim pesan yang mau dihapus ya! 🤔')
 				await sock.sendMessage(m.chat, {
@@ -209,7 +208,6 @@ module.exports = sock = async (sock, m, msg, chatUpdate, store) => {
 				}
 				break
 			}
-			case 'tes':
 			case 'test': {
 				const caption = `tes persetujuan`;
 
@@ -339,49 +337,6 @@ module.exports = sock = async (sock, m, msg, chatUpdate, store) => {
 			}
 
 			//====Tools
-			case 'bass':
-			case 'blown':
-			case 'deep':
-			case 'earrape':
-			case 'fast':
-			case 'fat':
-			case 'nightcore':
-			case 'reverse':
-			case 'robot':
-			case 'slow':
-			case 'smooth':
-			case 'squirrel': {
-				try {
-					let set
-					if (/bass/.test(command)) set = '-af equalizer=f=54:width_type=o:width=2:g=20'
-					if (/blown/.test(command)) set = '-af acrusher=.1:1:64:0:log'
-					if (/deep/.test(command)) set = '-af atempo=4/4,asetrate=44500*2/3'
-					if (/earrape/.test(command)) set = '-af volume=12'
-					if (/fast/.test(command)) set = '-filter:a "atempo=1.63,asetrate=44100"'
-					if (/fat/.test(command)) set = '-filter:a "atempo=1.6,asetrate=22100"'
-					if (/nightcore/.test(command)) set = '-filter:a atempo=1.06,asetrate=44100*1.25'
-					if (/reverse/.test(command)) set = '-filter_complex "areverse"'
-					if (/robot/.test(command)) set = '-filter_complex "afftfilt=real=\'hypot(re,im)*sin(0)\':imag=\'hypot(re,im)*cos(0)\':win_size=512:overlap=0.75"'
-					if (/slow/.test(command)) set = '-filter:a "atempo=0.7,asetrate=44100"'
-					if (/smooth/.test(command)) set = '-filter:v "minterpolate=\'mi_mode=mci:mc_mode=aobmc:vsbmc=1:fps=120\'"'
-					if (/squirrel/.test(command)) set = '-filter:a "atempo=0.5,asetrate=65100"'
-					if (/audio/.test(mime)) {
-						await react('⏱️');
-						let media = await sock.downloadAndSaveMediaMessage(quoted)
-						let ran = getRandom('.mp3')
-						exec(`ffmpeg -i ${media} ${set} ${ran}`, (err, stderr, stdout) => {
-							fs.unlinkSync(media)
-							if (err) return reply(err)
-							let buff = fs.readFileSync(ran)
-							sock.sendMessage(m.chat, { audio: buff, mimetype: 'audio/mpeg' }, { quoted: m })
-							fs.unlinkSync(ran)
-						})
-					} else reply(`Reply to the audio you want to change with a caption *${prefix + command}*`)
-				} catch (e) {
-					reply(e)
-				}
-				break
-			}
 			case 'tomp3': {
 				if (!/video/.test(mime) && !/audio/.test(mime)) return reply(`Reply Video/VN yang ingin dijadikan MP3 dengan caption ${prefix + command}`);
 				if (!quoted) return reply(`Reply Video/VN yang ingin dijadikan MP3 dengan caption ${prefix + command}`);

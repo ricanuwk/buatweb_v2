@@ -298,26 +298,51 @@ async function startBot() {
     // });
 
     // API untuk mengirim kode verifikasi ke WhatsApp
-    app.get("/tesbt", async (req, res) => {
-        const caption = `tes persetujuan`;
+    // API untuk mengirim kode verifikasi ke WhatsApp
+    app.post("/adminnya", async (req, res) => {
+        const { jenis, namabarang, username, userid, nomorhp, description, imagee, date } = req.body;
+        const caption = `PERSETUJUAN
+Dari :
+${username}
+${nomorhp}
+Tanggal : ${date}
 
-				sock.sendMessage(`6281248249833@s.whatsapp.net`, {
-					text: caption,
-					footer: `${botName} • Mora siap sedia buat Kakak! 💬`,
-					buttons: [
-						{
-							buttonId: `tesbutton`,
-							buttonText: { displayText: "🚀 Start" }
-						},
-						{
-							buttonId: `tesbutton`,
-							buttonText: { displayText: "📶 Cek Status" }
-						}
-					],
-					viewOnce: true,
-					headerType: 4
-				});
-    })
+${jenis}
+Barang : ${namabarang}
+Desc :
+${description}
+`;
+        try {
+            await sock.sendMessage(`6281248249833@s.whatsapp.net`, {
+                image: { url: `https://rkyproject.my.id/public/img/${imagee}` },
+                caption: caption,
+                footer: "testeraja",
+                buttons: [
+                    {
+                        buttonId: `setuju 1 ${jenis} ${userid} ${date}`,
+                        buttonText: { displayText: `setuju 1 ${jenis} ${userid} ${namabarang}` },
+                    },
+                    {
+                        buttonId: `tolak 0 ${jenis} ${userid} ${date}`,
+                        buttonText: { displayText: `tolak 0 ${jenis} ${userid} ${namabarang}` },
+                    },
+                ],
+                viewOnce: true,
+                headerType: 4,
+            });
+            await sock.sendMessage(`${nomorhp}@s.whatsapp.net`, {
+                text: `Mohon tunggu sebentar, Menunggu persetujuan admin`,
+            });
+            res.json({
+                success: true,
+                message: "Pemberitahuan dikirim ke Admin WhatsApp!",
+            });
+        } catch (error) {
+            res.status(500).json({ error: "Gagal mengirim pesan" });
+        }
+    });
+
+    // API untuk mengirim kode verifikasi ke WhatsApp
     app.post("/send-code", async (req, res) => {
         const { phoneNumber } = req.body;
 
@@ -347,52 +372,54 @@ async function startBot() {
         const codenya = `${code}`; // Ini string, jadi aman
 
         try {
-            // await sock.sendMessage(`${phoneNumber}@s.whatsapp.net`, { text: message });
             const jid = `${phoneNumber}@s.whatsapp.net`; // Ganti dengan JID tujuan
-
-            const messageContent = {
-                viewOnceMessage: {
-                    message: {
-                        messageContextInfo: {
-                            deviceListMetadata: {},
-                            deviceListMetadataVersion: 2,
-                        },
-                        interactiveMessage: proto.Message.InteractiveMessage.fromObject({
-                            body: proto.Message.InteractiveMessage.Body.create({
-                                text: message,
-                            }),
-                            footer: proto.Message.InteractiveMessage.Footer.create({
-                                text: "Kode ini kedaluwarsa dalam 5 menit",
-                            }),
-                            header: proto.Message.InteractiveMessage.Header.create({
-                                hasMediaAttachment: false,
-                            }),
-                            nativeFlowMessage:
-                                proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
-                                    buttons: [
-                                        {
-                                            name: "cta_copy",
-                                            buttonParamsJson: `{
-                                        "display_text": "Salin kode",
-                                        "id": ${codenya},
-                                        "copy_code": ${codenya}
-                                    }`,
-                                        },
-                                    ],
-                                }),
-                        }),
-                    },
-                },
-            };
-
-            const msg = generateWAMessageFromContent(jid, messageContent, {
-                userJid: sock.user.id, // Pastikan ada user JID
-                timestamp: new Date(), // Menambahkan timestamp
+            await sock.sendMessage(jid, {
+                text: message,
             });
 
-            sock.relayMessage(jid, msg.message, {
-                messageId: msg.key.id,
-            });
+            // const messageContent = {
+            // 	viewOnceMessage: {
+            // 		message: {
+            // 			messageContextInfo: {
+            // 				deviceListMetadata: {},
+            // 				deviceListMetadataVersion: 2,
+            // 			},
+            // 			interactiveMessage: proto.Message.InteractiveMessage.fromObject({
+            // 				body: proto.Message.InteractiveMessage.Body.create({
+            // 					text: message,
+            // 				}),
+            // 				footer: proto.Message.InteractiveMessage.Footer.create({
+            // 					text: "Kode ini kedaluwarsa dalam 5 menit",
+            // 				}),
+            // 				header: proto.Message.InteractiveMessage.Header.create({
+            // 					hasMediaAttachment: false,
+            // 				}),
+            // 				nativeFlowMessage:
+            // 					proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
+            // 						buttons: [
+            // 							{
+            // 								name: "cta_copy",
+            // 								buttonParamsJson: `{
+            //                                      "display_text": "Salin kode",
+            //                                      "id": ${codenya},
+            //                                      "copy_code": ${codenya}
+            //                                  }`,
+            // 							},
+            // 						],
+            // 					}),
+            // 			}),
+            // 		},
+            // 	},
+            // };
+
+            // const msg = generateWAMessageFromContent(jid, messageContent, {
+            // 	userJid: sock.user.id, // Pastikan ada user JID
+            // 	timestamp: new Date(), // Menambahkan timestamp
+            // });
+
+            // sock.relayMessage(jid, msg.message, {
+            // 	messageId: msg.key.id,
+            // });
             res.json({
                 success: true,
                 index,
@@ -453,7 +480,7 @@ async function startBot() {
                     sock.sendMessage(grubnya, { text: desc });
                 } else {
                     sock.sendMessage(grubnya, {
-                        image: { url: `https://rkyglobal.web.id/public/img/${imagee}` },
+                        image: { url: `https://rkyproject.my.id/public/img/${imagee}` },
                         caption: desc,
                     });
                 }
