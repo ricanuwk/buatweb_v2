@@ -22,9 +22,12 @@
     "@whiskeysockets/baileys": "npm:@fizzxydev/baileys-pro",
     "awesome-phonenumber": "^5.9.0",
     "axios": "^1.4.0",
+    "body-parser": "^1.20.3",
     "chalk": "4",
     "cheerio": "^1.0.0",
+    "cors": "^2.8.5",
     "express": "^4.21.2",
+    "express-fileupload": "^1.5.1",
     "file-type": "^16.5.3",
     "fluent-ffmpeg": "^2.1.2",
     "form-data": "^4.0.0",
@@ -42,6 +45,7 @@
     "qrcode": "^1.5.3",
     "qrcode-reader": "^1.0.4",
     "qrcode-terminal": "^0.12.0",
+    "socket.io": "^4.8.1",
     "steno": "^1.0.0"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
