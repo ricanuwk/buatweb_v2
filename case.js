@@ -181,13 +181,14 @@ module.exports = sock = async (sock, m, msg, chatUpdate, store) => {
 				let response = await fetch("https://rkyproject.my.id/persetujuanadmin", {
 					"method": "POST",
 					"headers": {
-						'Content-Type': 'application/json'
+						'Content-Type': 'application/json',
+						'X-CSRF-TOKEN': args[0] // Gantilah csrf_token dengan nilai token yang valid
 					},
 					"body": JSON.stringify({
-						"izin": args[0],
-						"jenis": args[1],
-						"user": args[2],
-						"item": args[3]
+						"izin": args[1],
+						"jenis": args[2],
+						"user": args[3],
+						"item": args[4]
 					})
 				});
 
