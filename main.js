@@ -477,7 +477,7 @@ ${description}
         ];
         try {
             for (const grubnya of idgrubnya) {
-                if (gmbrnya === true) {
+                if (!gmbrnya) {
                     sock.sendMessage(grubnya, { text: desc });
                 } else {
                     sock.sendMessage(grubnya, {
